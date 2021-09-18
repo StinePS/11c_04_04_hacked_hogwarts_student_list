@@ -1,0 +1,14 @@
+THE 4 SPRINTS:
+1. Displaying the list of students, with sorting, filtering, searching and modal.
+2. Expelling and prefects
+3. Blood-status and inquisitorial squad
+4. Hacking
+
+
+1. SPRINT
+- Initial setup, fetching data
+- Displaying list of students
+- Sorting
+- Filtering
+- Searching
+- Modal

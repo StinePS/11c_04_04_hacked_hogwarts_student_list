@@ -1,0 +1,120 @@
+HACKED HOGWARTS STUDENT LIST
+
+REQUIREMENTS
+
+THE DATA
+- Must be split up in first, middle, last, and nick names
+
+
+
+THE LIST
+- SORTING by first name, last name, house, and prefect status
+
+- FILTERING by house, prefect status, expelled/not expelled (+ maybe blood status & gender?)
+
+- SEARCHING by first or last name in a search field, fx "ha" would show Harry Potter, Hannah Abbott, Zacharias Smith, and Michael Corner
+
+- ABOUT: Interface must show some details about the lists - Number of students in each house, total number of (not expelled) students, number of expelled students, number of students currently displayed
+
+- THEMED MODAL showing first name, middle name (if any), last name, nickname (if any), photo (if it exists), house-crest and -colors, blood status + if the student is: prefect or not, expelled or not, member of inquisitorial squad or not
+
+- EXPELLING students (either done from list or modal) - Removes a student from the list of students, and adds them to another list of expelled students
+Once expelled a student cannot returm to the original list (except on reload)
+
+- PREFECTS - Only two per house, usually a boy and a girl
+User must be able to make students prefects or revoke the privilege at any time
+Confirmation box for removing existing prefect before assigning a new one
+
+- BLOOD STATUS must be calculated by the system. Decide what to do when a name occurs on both the pure blood AND the half blood list = Pure blood / half blood?
+
+- INQUISITORIAL SQUAD - User must be able to appoint/remove student from squad
+Only pure bloods or students from Slytherin can be appointed, but no limit on number
+
+- HACKING: Create function hackTheSystem() that activates the hacking (only) when called - Multiple calls should make no difference, so make sure that the system keeps track of weather it has been hacked!
+Add a secret button or keystroke that the user can enter to hack the system, but is also possible to do from the console
+Document in report how the system can be hacked
+
+Hacking must result in (at least) 3 things happening:
+1. Inject hacker (with own name) into the list of students and remain there until reload
+Upon trying to expel, return warning of some sort - Hacker can't be expelled!
+
+2. Blood status is no longer trustworthy
+Former pure-bloods = random blood status, muggle and half-blood = new pure-blood
+If you can randomly modify the former pure-bloods on every redisplay (sort or filter) of the list, the better!
+
+3. Adding a student to the inquisitorial squad will only work for a limited time, before the student is automatically removed again. Preferably so the user notices that the student gets removed.
+
+
+
+VISUAL DESIGN
+You are free to design the web-page as you like, with the few requirements about images, crests and housecolors.
+
+However, make it as visually interessting an experience as possibly. Don't just have an ul of student-names with buttons, but use your design-skills to make something that looks cool!
+
+Add animations and visual feedback. When expelling a student, don't just reload the list without that student, but add an animation that removes the student visually from the list.
+
+When preventing the user from expelling you, be as creative as possible. Think about bad hacker-movies from the 90s! Go crazy, use video and sounds if needed!
+
+Give visual feedback when revoking inquisitorial squad membership from the timer. Make sure that the user sees that the status has changed! You want the hacking to be obvious.
+
+Think about what to include in the list visually. Prefect-, blood, inquisitorial-squad status? Could you use icons? Make it visually exiting!
+
+It isn't a requirement that you draw everything yourself, but be aware that you have the rights for the graphics you use on the page. Check the license on the graphics you find. If you need to credit the creator, do so in a footer on the page, as well as in your report.
+
+
+
+CODE DESIGN
+You must use pure vanilla JavaScript (with CSS and HTML) for your solution. No frameworks or plugins.
+
+Your code must run in "strict" mode, and you must use ES6 JavaScript. That means let and const rather than var, and object literals, rather than .prototype definitions.
+
+Write all the code yourself. If you need to use a part you have found on the web, then black-box it as much as possible, and remember to identify where you got it. That means put it in a function, or have comments before and after the lines. Put the URL in the comment, with a short description of what the code is supposed to do. 
+
+Use as many functions as possible. Many smaller functions rather than a few large. Think separation of concerns, as well as split between model, view and controller.
+
+The code must use at least one object, a Student-object, with all the properties of a student. Create your own object, when reading the JSON-file, and calculate the properties from that file. Also let some properties have default values, if not found in the file.
+
+You aren't required to add methods or setters and getters to the object, but are welcome to try!
+
+
+
+PROCESS AND CODE DESIGN
+
+It is recommended that you split the project into several smaller "sprints":
+1. Displaying the list of students, with sorting, filtering, searching and details popup.
+2. Expelling and prefects
+3. Blood-status and inquisitorial squad
+4. Hacking
+
+For each sprint, draw an activity diagram of the major activities - you don't need to redraw the sorting and filtering-diagram for the remaining sprints.
+
+Make sure you are completely clear about the flow of activities for expelling and prefects - maybe try to implement expelling before starting the design on prefects.
+
+Get someone else to "play out" your activity diagrams - preferably someone you don't discuss your daily work with. 
+
+
+
+DOCUMENTATION
+
+The assignment must be handed in as a report with this information:
+
+- Wireframe for the visual design - include all the dialog-boxes and modals!
+- An overview of the various components of the application
+- A list of features / user stories (e.g.: sort by first name, sort by last name, etc.)
+- A can/can't list of each component or activity, with a note on whether you know how to do it or not (at the beginning of the design)
+- Pseudocode or activity diagrams for algorithms:
+        Expelling (incl check for not-expelling you)
+        Prefects
+        Blood-status (original decision-algorithm)
+        hackTheSystem function and additional hacking-features
+- Complete activity diagram for all the functions, which parameters they receive, and values they return
+- A list of Student-object properties, e.g. firstName, lastName, imageName and so on. Could be a screengrab of the Student object
+
+Collect all documentation in one pdf, make sure it is readable on screen as well as (theoretically) print-out.
+
+The frontpage must include:
+Your name
+A screenshot of the product
+A link to the final solution (written out, as well as clickable)
+A link to your github repository (written out, as well as clickable)
+

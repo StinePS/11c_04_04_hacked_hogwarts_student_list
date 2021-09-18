@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hacked Hogwarts Student List</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main>
+      <section>
+        <h1>Hogwarts School of Witchcraft and Wizardry</h1>
+        <h2>Enrolled students 1991</h2>
+
+        <div id="list">
+          <!-- student template will be copied and inserted here -->
+        </div>
+      </section>
+
+      <template id="student">
+        <tr>
+          <td data-field="image"></td>
+          <td data-field="first-name"></td>
+          <td data-field="middle-name"></td>
+          <td data-field="last-name"></td>
+          <td data-field="nickname"></td>
+          <td data-field="gender"></td>
+          <td data-field="house"></td>
+          <!--
+          <td data-field="prefect" data-prefect="false"></td>
+          <td data-field="squad" data-squad="false"></td>
+          <td data-field="blood-status"></td>
+          -->
+        </tr>
+      </template>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
