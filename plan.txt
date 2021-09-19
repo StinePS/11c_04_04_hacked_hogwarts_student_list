@@ -10,5 +10,5 @@ THE 4 SPRINTS:
 - Displaying list of students - Done!
 - Filtering (as in 11c.03.05) - Done!
 - Sorting (as in 11.04.01) - Done!
-- Searching
+- Searching - Done!
 - Modal (as in 11c.04.03)

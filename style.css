@@ -7,10 +7,42 @@ section {
   max-width: 1300px;
 }
 
-select {
-  background-color: rgb(187, 237, 212);
+select,
+input {
+  background-color: rgb(249, 193, 135);
   color: black;
   font-size: 1rem;
   cursor: pointer;
   padding: 0.5rem;
+}
+
+/* LIST STYLING */
+#list {
+  border-collapse: collapse;
+}
+
+#list tbody tr td {
+  padding: 0.25rem;
+}
+
+#list tbody tr:nth-child(odd) td {
+  background-color: rgb(249, 193, 135);
+  border-right: rgb(240, 249, 255) 1px dotted;
+}
+
+#list tbody tr:nth-child(even) td {
+  border-right: rgb(249, 193, 135) 1px dotted;
+}
+
+/* SORTING */
+#sorting th.sortby {
+  text-decoration: underline;
+}
+
+#sorting th.sortby[data-sort-direction="asc"]::after {
+  content: " ⇑";
+}
+
+#sorting th.sortby[data-sort-direction="desc"]::after {
+  content: " ⇓";
 }

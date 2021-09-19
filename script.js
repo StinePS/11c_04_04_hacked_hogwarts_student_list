@@ -23,6 +23,8 @@ function registerButtons() {
   document.querySelector("select").addEventListener("change", (e) => {
     setFilter(e.currentTarget.value);
   });
+  // Search field
+  document.querySelector("#search").addEventListener("input", searchStudent);
   // Sorting-"buttons"
   document.querySelectorAll("[data-action='sort']").forEach((button) => button.addEventListener("click", selectSort));
 }
@@ -111,6 +113,7 @@ function prepareObjects(jsonData) {
   displayList(allStudents);
 }
 
+// FILTERING
 function setFilter(filter) {
   settings.filterBy = filter;
   buildList();
@@ -147,6 +150,25 @@ function isSlyth(student) {
 }
 // TO DO: Filter functions for prefects, expelled & active students
 
+// SEARCHING
+function searchStudent() {
+  let search = document.querySelector("#search").value.toLowerCase();
+  let searchResult = allStudents.filter(filterSearch);
+
+  function filterSearch(student) {
+    // Searching in firstName, middleName & lastName
+    if (student.firstName.toString().toLowerCase().includes(search) || student.middleName.toString().toLowerCase().includes(search) || student.lastName.toString().toLowerCase().includes(search)) {
+      return true;
+    }
+    return false;
+  }
+  if (search === " ") {
+    displayList(allStudents);
+  }
+  displayList(searchResult);
+}
+
+// SORTING
 function selectSort(event) {
   const sortBy = event.target.dataset.sort;
   const sortDir = event.target.dataset.sortDirection;
