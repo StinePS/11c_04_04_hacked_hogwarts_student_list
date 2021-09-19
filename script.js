@@ -5,22 +5,37 @@ if (typeof window !== "undefined") {
     console.log("DOMContentLoaded");
   });
 
-  registerFilter();
+  registerButtons();
   loadJSON();
 }
 
 const allStudents = [];
 
-function registerFilter() {
-  document.querySelectorAll("[data-action='filter']").forEach((option) => option.addEventListener("click", selectFilter));
+// Global default settings
+const settings = {
+  option: "all-students",
+  sortBy: "firstName",
+  sortDir: "asc",
+};
+
+function registerButtons() {
+  // Select-options for selecting filter
+  document.querySelector("select").addEventListener("change", (e) => {
+    setFilter(e.currentTarget.value);
+  });
+  // Sorting-"buttons"
+  document.querySelectorAll("[data-action='sort']").forEach((button) => button.addEventListener("click", selectSort));
 }
 
 async function loadJSON() {
   const response = await fetch("https://petlatkea.dk/2021/hogwarts/students.json");
   const jsonData = await response.json();
+
+  // When loaded, prepare data objects
   prepareObjects(jsonData);
 
-  //   console.table(allStudents);
+  // Filter initial data
+  setFilter(document.querySelector("select").value);
 }
 
 function prepareObjects(jsonData) {
@@ -42,7 +57,7 @@ function prepareObjects(jsonData) {
     student.firstName = getFirstName(splitUp);
     student.middleName = getMiddleName(splitUp);
     student.lastName = getLastName(splitUp);
-    student.nickName = getNickname(splitUp);
+    student.nickname = getNickname(splitUp);
     student.house = capitalize(trimHouse);
     // student.image = getImg
     allStudents.push(student);
@@ -96,25 +111,22 @@ function prepareObjects(jsonData) {
   displayList(allStudents);
 }
 
-function selectFilter() {
-  const filter = event.target.dataset.filter;
-  console.log(`Selected filter: ${filter}`);
-  filterList(filter);
+function setFilter(filter) {
+  settings.filterBy = filter;
+  buildList();
 }
 
-function filterList(filterBy) {
-  let filteredList = allStudents;
-  if (filterBy === "gryffindor") {
+function filterList(filteredList) {
+  if (settings.filterBy === "gryffindor") {
     filteredList = allStudents.filter(isGryff);
-  } else if (filterBy === "hufflepuff") {
+  } else if (settings.filterBy === "hufflepuff") {
     filteredList = allStudents.filter(isHuff);
-  } else if (filterBy === "ravenclaw") {
+  } else if (settings.filterBy === "ravenclaw") {
     filteredList = allStudents.filter(isRaven);
-  } else if (filterBy === "slytherin") {
+  } else if (settings.filterBy === "slytherin") {
     filteredList = allStudents.filter(isSlyth);
   }
-
-  displayList(filteredList);
+  return filteredList;
 }
 
 // Filter functions
@@ -132,6 +144,60 @@ function isRaven(student) {
 
 function isSlyth(student) {
   return student.house.toLowerCase() === "slytherin";
+}
+// TO DO: Filter functions for prefects, expelled & active students
+
+function selectSort(event) {
+  const sortBy = event.target.dataset.sort;
+  const sortDir = event.target.dataset.sortDirection;
+
+  // Find "old" sortBy element and remove .sortby
+  const oldElement = document.querySelector(`[data-sort='${settings.sortBy}']`);
+  oldElement.classList.remove("sortby");
+
+  // Indicate active sort
+  event.target.classList.add("sortby");
+
+  // Toggle the direction of the sorting
+  if (sortDir === "asc") {
+    event.target.dataset.sortDirection = "desc";
+  } else {
+    event.target.dataset.sortDirection = "asc";
+  }
+  console.log(`User selected ${sortBy} - ${sortDir}`);
+  setSort(sortBy, sortDir);
+}
+
+function setSort(sortBy, sortDir) {
+  settings.sortBy = sortBy;
+  settings.sortDir = sortDir;
+  buildList();
+}
+
+function sortList(sortedList) {
+  let direction = 1;
+  if (settings.sortDir === "desc") {
+    direction = -1;
+  } else {
+    settings.direction = 1;
+  }
+
+  sortedList = sortedList.sort(sortByProperty);
+
+  function sortByProperty(studentA, studentB) {
+    if (studentA[settings.sortBy] < studentB[settings.sortBy]) {
+      return -1 * direction;
+    }
+    return 1 * direction;
+  }
+  return sortedList;
+}
+
+function buildList() {
+  const currentList = filterList(allStudents);
+  const sortedList = sortList(currentList);
+
+  displayList(sortedList);
 }
 
 function displayList(students) {

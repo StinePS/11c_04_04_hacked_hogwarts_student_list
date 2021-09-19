@@ -15,19 +15,21 @@
 
         <nav>
           <select name="select-filter" id="select-filter">
-            <option value="all-students" data-action="filter" data-filter="*">All students</option>
-            <option value="gryffindor" data-action="filter" data-filter="gryffindor">Students of Gryffindor</option>
-            <option value="hufflepuff" data-action="filter" data-filter="hufflepuff">Students of Hufflepuff</option>
-            <option value="ravenclaw" data-action="filter" data-filter="ravenclaw">Students of Ravenclaw</option>
-            <option value="slytherin" data-action="filter" data-filter="slytherin">Students of Slytherin</option>
-            <option value="prefect" data-action="filter" data-filter="prefect">Prefects</option>
-            <option value="expelled" data-action="filter" data-filter="expelled">Expelled students</option>
-            <option value="active" data-action="filter" data-filter="active">Active students</option>
+            <option value="all-students">All students</option>
+            <option value="gryffindor">Students of Gryffindor</option>
+            <option value="hufflepuff">Students of Hufflepuff</option>
+            <option value="ravenclaw">Students of Ravenclaw</option>
+            <option value="slytherin">Students of Slytherin</option>
+            <option value="prefect">Prefects</option>
+            <option value="expelled">Expelled students</option>
+            <option value="active">Active students</option>
           </select>
+          <input id="search type="search" placeholder="Search for student">
         </nav>
 
         <table id="list">
           <thead>
+            <!-- "Headers" used for sorting students -->
             <tr id="sorting">
               <th data-action="sort" data-sort-direction="asc">Prefect</th>
               <th data-action="sort" data-sort-direction="asc">First name</th>

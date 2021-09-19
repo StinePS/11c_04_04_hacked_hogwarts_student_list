@@ -9,6 +9,6 @@ THE 4 SPRINTS:
 - Initial setup, fetching cleaned-up data (as in 11c.02.05) - Done!
 - Displaying list of students - Done!
 - Filtering (as in 11c.03.05) - Done!
-- Sorting (as in 11.04.01)
+- Sorting (as in 11.04.01) - Done!
 - Searching
 - Modal (as in 11c.04.03)
