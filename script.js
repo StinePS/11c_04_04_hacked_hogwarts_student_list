@@ -175,7 +175,7 @@ function selectSort(event) {
 
   // Find "old" sortBy element and remove .sortby
   const oldElement = document.querySelector(`[data-sort='${settings.sortBy}']`);
-  oldElement.classList.remove("sortby");
+  if (oldElement) oldElement.classList.remove("sortby");
 
   // Indicate active sort
   event.target.classList.add("sortby");
@@ -201,9 +201,8 @@ function sortList(sortedList) {
   if (settings.sortDir === "desc") {
     direction = -1;
   } else {
-    settings.direction = 1;
+    direction = 1;
   }
-
   sortedList = sortedList.sort(sortByProperty);
 
   function sortByProperty(studentA, studentB) {
@@ -235,9 +234,9 @@ function displayStudent(student) {
   const clone = document.querySelector("template#student").content.cloneNode(true);
 
   // set clone data
-  clone.querySelector("[data-field=first-name]").textContent = student.firstName;
-  clone.querySelector("[data-field=middle-name]").textContent = student.middleName;
-  clone.querySelector("[data-field=last-name]").textContent = student.lastName;
+  clone.querySelector("[data-field=firstName]").textContent = student.firstName;
+  clone.querySelector("[data-field=middleName]").textContent = student.middleName;
+  clone.querySelector("[data-field=lastName]").textContent = student.lastName;
   clone.querySelector("[data-field=nickname]").textContent = student.nickname;
   clone.querySelector("[data-field=house]").textContent = student.house;
 
