@@ -13,14 +13,41 @@
         <h1>Hogwarts School of Witchcraft and Wizardry</h1>
         <h2>Enrolled students 1991</h2>
 
-        <div id="list">
-          <!-- student template will be copied and inserted here -->
-        </div>
+        <nav>
+          <select name="select-filter" id="select-filter">
+            <option value="all-students" data-action="filter" data-filter="*">All students</option>
+            <option value="gryffindor" data-action="filter" data-filter="gryffindor">Students of Gryffindor</option>
+            <option value="hufflepuff" data-action="filter" data-filter="hufflepuff">Students of Hufflepuff</option>
+            <option value="ravenclaw" data-action="filter" data-filter="ravenclaw">Students of Ravenclaw</option>
+            <option value="slytherin" data-action="filter" data-filter="slytherin">Students of Slytherin</option>
+            <option value="prefect" data-action="filter" data-filter="prefect">Prefects</option>
+            <option value="expelled" data-action="filter" data-filter="expelled">Expelled students</option>
+            <option value="active" data-action="filter" data-filter="active">Active students</option>
+          </select>
+        </nav>
+
+        <table id="list">
+          <thead>
+            <tr id="sorting">
+              <th data-action="sort" data-sort-direction="asc">Prefect</th>
+              <th data-action="sort" data-sort-direction="asc">First name</th>
+              <th data-action="sort" data-sort-direction="asc">Middle name</th>
+              <th data-action="sort" data-sort-direction="asc">Last name</th>
+              <th data-action="sort" data-sort-direction="asc">Nickname</th>
+              <th data-action="sort" data-sort-direction="asc">Gender</th>
+              <th data-action="sort" data-sort-direction="asc">House</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- student template will be copied and inserted here -->
+          </tbody>
+        </table>
       </section>
 
       <template id="student">
         <tr>
-          <td data-field="image"></td>
+          <td data-field="prefect"></td>
           <td data-field="first-name"></td>
           <td data-field="middle-name"></td>
           <td data-field="last-name"></td>
@@ -28,7 +55,7 @@
           <td data-field="gender"></td>
           <td data-field="house"></td>
           <!--
-          <td data-field="prefect" data-prefect="false"></td>
+          <td data-field="prefect" data-prefect="false">☆</td>
           <td data-field="squad" data-squad="false"></td>
           <td data-field="blood-status"></td>
           -->

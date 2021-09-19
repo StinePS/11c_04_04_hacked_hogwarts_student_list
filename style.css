@@ -2,3 +2,15 @@
   margin: 0 auto;
   box-sizing: border-box;
 }
+
+section {
+  max-width: 1300px;
+}
+
+select {
+  background-color: rgb(187, 237, 212);
+  color: black;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
