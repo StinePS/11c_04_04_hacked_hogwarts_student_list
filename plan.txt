@@ -11,4 +11,4 @@ THE 4 SPRINTS:
 - Filtering (as in 11c.03.05) - Done!
 - Sorting (as in 11.04.01) - Done!
 - Searching - Done!
-- Modal (as in 11c.04.03)
+- Modal (as in 11c.04.03) - Done!

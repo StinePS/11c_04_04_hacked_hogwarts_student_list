@@ -43,11 +43,13 @@ async function loadJSON() {
 function prepareObjects(jsonData) {
   // Prototype for all students
   const Student = {
-    firstName: "unknown",
+    prefect: false,
+    gender: "-unknown-",
+    firstName: "-unknown-",
     middleName: "",
-    lastName: "unknown",
+    lastName: "-unknown-",
     nickname: "",
-    house: "unknown",
+    house: "-unknown-",
   };
 
   // Create new object with cleaned data and store it in the allStudents array
@@ -56,6 +58,7 @@ function prepareObjects(jsonData) {
     const student = Object.create(Student);
     const splitUp = element.fullname.trim().split(" ").map(capitalize);
     const trimHouse = element.house.trim();
+    student.gender = element.gender.trim();
     student.firstName = getFirstName(splitUp);
     student.middleName = getMiddleName(splitUp);
     student.lastName = getLastName(splitUp);
@@ -222,24 +225,103 @@ function buildList() {
 }
 
 function displayList(students) {
-  // clear the list
+  // Clear the list
   document.querySelector("#list tbody").innerHTML = "";
 
-  // build a new list
+  // Build a new list
   students.forEach(displayStudent);
 }
 
 function displayStudent(student) {
-  // create clone
+  // Create clone
   const clone = document.querySelector("template#student").content.cloneNode(true);
 
-  // set clone data
+  // Set clone data
+  // Gender
+  if (student.gender === "boy") {
+    clone.querySelector("[data-field=gender]").textContent = " ♂ ";
+  } else if (student.gender === "girl") {
+    clone.querySelector("[data-field=gender]").textContent = " ♀ ";
+  } else {
+    clone.querySelector("[data-field=gender]").textContent = "-unknown-";
+  }
+  // Name and house
   clone.querySelector("[data-field=firstName]").textContent = student.firstName;
   clone.querySelector("[data-field=middleName]").textContent = student.middleName;
   clone.querySelector("[data-field=lastName]").textContent = student.lastName;
   clone.querySelector("[data-field=nickname]").textContent = student.nickname;
   clone.querySelector("[data-field=house]").textContent = student.house;
 
+  // Prefect - add star to each student in the list according to their boolean value
+  if (student.prefect === true) {
+    clone.querySelector("[data-field=prefect]").textContent = " ⭐ ";
+  } else {
+    clone.querySelector("[data-field=prefect]").textContent = " ☆ ";
+  }
+  clone.querySelector("[data-field=prefect]").addEventListener("click", clickPrefect);
+
+  // Turn prefect stars on and off
+  function clickPrefect() {
+    // If student is already a prefect = remove prefect status
+    if (student.prefect === true) {
+      student.prefect = false;
+    } else {
+      tryToMakePrefect(student);
+    }
+    console.log(`Prefect = ${student.prefect}`);
+    buildList();
+  }
+
   // append clone to list
   document.querySelector("#list tbody").appendChild(clone);
+}
+
+// Prefect logic
+function tryToMakePrefect(selectedStudent) {
+  const allPrefects = allStudents.filter((student) => student.prefect);
+  const prefects = allPrefects.filter((prefect) => prefect.house === selectedStudent.house);
+  const other = prefects.filter((prefects) => selectedStudent.house && prefects.gender === selectedStudent.gender).shift();
+
+  // If there is another prefect of the same house & gender
+  if (other !== undefined) {
+    console.log("There can only be two prefects from each house - A boy and a girl");
+    removeOther(other);
+  } else {
+    // There is no problem
+    makePrefect(selectedStudent);
+  }
+
+  function removeOther(other) {
+    // Ask user to ignore or remove 'other'
+    document.querySelector("#remove_other_prefect").classList.remove("hidden");
+    document.querySelector("#remove_other_prefect .closebutton").addEventListener("click", closeDialogue);
+    document.querySelector("#remove_other_prefect .removebutton").addEventListener("click", clickRemoveButton);
+    document.querySelector("#remove_other_prefect [data-field=other-prefect]").textContent = `${other.firstName} ${other.lastName}`;
+    document.querySelector(".removebutton [data-field=other-prefect]").textContent = other.firstName;
+
+    // If ignore - Do nothing:
+    // Clicking closebutton hides modal/dialogue box
+    function closeDialogue() {
+      document.querySelector("#remove_other_prefect").classList.add("hidden");
+
+      document.querySelector("#remove_other_prefect .closebutton").removeEventListener("click", closeDialogue);
+      document.querySelector("#remove_other_prefect .removebutton").removeEventListener("click", clickRemoveButton);
+    }
+
+    // If remove other:
+    function clickRemoveButton() {
+      removePrefect(other);
+      makePrefect(selectedStudent);
+      buildList();
+      closeDialogue();
+    }
+  }
+
+  function removePrefect(prefectStudent) {
+    prefectStudent.prefect = false;
+  }
+
+  function makePrefect(student) {
+    student.prefect = true;
+  }
 }
