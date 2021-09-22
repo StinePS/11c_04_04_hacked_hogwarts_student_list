@@ -5,10 +5,21 @@ THE 4 SPRINTS:
 4. Hacking
 
 
-1. SPRINT
+1ST SPRINT
 - Initial setup, fetching cleaned-up data (as in 11c.02.05) - Done!
 - Displaying list of students - Done!
 - Filtering (as in 11c.03.05) - Done!
 - Sorting (as in 11.04.01) - Done!
 - Searching - Done!
-- Modal (as in 11c.04.03) - Done!
+- Details modal - Done!
+
+2ND SPRINT
+- Adding column for prefect stars - Done!
+- Adding toggle to prefect stars - Done!
+- Warning modal (as in 11c.04.03) - Done!
+- Implement logic and user interface - Done!
+- Figuring out expelling...
+- Counters
+
+3RD SPRINT
+- Adding column for inquisitorial squad

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hacked Hogwarts Student List</title>
+    <title>Hogwarts Student List</title>
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -33,13 +33,14 @@
           <thead>
             <!-- "Headers" used for sorting students -->
             <tr id="sorting">
-              <th data-action="sort" data-sort-direction="asc" data-sort="prefect">Prefect</th>
-              <th>Gender</th>
               <th data-action="sort" data-sort-direction="asc" data-sort="firstName">First name</th>
               <th data-action="sort" data-sort-direction="asc" data-sort="middleName">Middle name</th>
               <th data-action="sort" data-sort-direction="asc" data-sort="lastName">Last name</th>
               <th data-action="sort" data-sort-direction="asc" data-sort="nickname">Nickname</th>
               <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
+              <th>Gender</th>
+              <th data-action="sort" data-sort-direction="asc" data-sort="prefect">Prefect</th>
+              <th data-action="sort" data-sort-direction="asc" data-sort="squad">Inq. squad</th>
             </tr>
           </thead>
 
@@ -50,22 +51,45 @@
       </section>
 
       <template id="student">
-        <tr>
-          <td data-field="prefect" data-prefect="false"></td>
-          <td class="gender" data-field="gender"></td>
-          <td data-field="firstName"></td>
-          <td data-field="middleName"></td>
-          <td data-field="lastName"></td>
-          <td data-field="nickname"></td>
-          <td data-field="house"></td>
+        <tr data-field="studentRow" class="student-info">
+            <td data-field="firstName"></td>
+            <td data-field="middleName"></td>
+            <td data-field="lastName"></td>
+            <td data-field="nickname"></td>
+            <td data-field="house"></td>
+            <td data-field="gender"></td>
+            <td data-field="prefect" data-prefect="false"></td>
+            <td data-field="squad" data-squad="false"></td>
           <!--
-          <td data-field="squad" data-squad="false"></td>
-          <td data-field="blood-status"></td>
+          <td class="click" data-field="blood-status"></td>
           -->
         </tr>
       </template>
 
-      <!-- Modal: Ask user to remove A or B or ignore-->
+      <!-- Details modal -->
+      <div id="details_modal" class="modal hidden">
+        <div class="details">
+          <div class="column left">
+            <div>
+              <img src="" alt="" class="student-image" />
+            </div>
+            <div class="student-details"></div>
+              <h1 class="full-name"></h1>
+              <p class="nickname"></p>
+              <p class="house"></p>
+              <p class="prefect"></p>
+              <p class="squad"></p>
+              <p class="blood-status"></p>
+              <p class="expelled"></p>
+            </div>
+          </div>
+          <div class="column right">
+            <button class="closebutton">X</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Warning modal: Ask user to remove 'other' or ignore -->
       <div id="remove_other_prefect" class="modal hidden">
         <div class="dialogue">
           <button class="closebutton">X</button>
