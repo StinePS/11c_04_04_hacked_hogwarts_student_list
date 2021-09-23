@@ -9,10 +9,9 @@
 
   <body>
     <main>
-
       <section id="splash">
         <div id="splash-img">
-          <img src="img/castle.jpg" alt="Castle with purple light and stars">
+          <img src="img/castle.jpg" alt="Castle with purple light and stars" />
         </div>
         <div id="splash-h1">
           <h1>Hogwarts</h1>
@@ -23,54 +22,76 @@
       </section>
 
       <section>
-        <h3>Enrolled students 1991</h3>
-        <nav>
-          <!-- Choose filter -->
-          <select name="select-filter" id="select-filter">
-            <option value="all-students">All students</option>
-            <option value="gryffindor">Students of Gryffindor</option>
-            <option value="hufflepuff">Students of Hufflepuff</option>
-            <option value="ravenclaw">Students of Ravenclaw</option>
-            <option value="slytherin">Students of Slytherin</option>
-            <option value="prefect">Prefects</option>
-            <option value="expelled">Expelled students</option>
-            <option value="active">Active students</option>
-          </select>
-          <!-- Search field -->
-          <input id="search" type="search" placeholder="Search for student" />
-        </nav>
+        <div class="container">
+          <div class="topbar">
+            <nav>
+              <!-- Choose filter -->
+              <select name="select-filter" id="select-filter">
+                <option value="all-students">All students</option>
+                <option value="gryffindor">Students of Gryffindor</option>
+                <option value="hufflepuff">Students of Hufflepuff</option>
+                <option value="ravenclaw">Students of Ravenclaw</option>
+                <option value="slytherin">Students of Slytherin</option>
+                <option value="prefect">Prefects</option>
+                <option value="expelled">Expelled students</option>
+                <option value="active">Active students</option>
+              </select>
+              <!-- Search field -->
+              <input id="search" type="search" placeholder="Search for student" />
+            </nav>
+          </div>
 
-        <table id="list">
-          <thead>
-            <!-- "Headers" used for sorting students -->
-            <tr id="sorting">
-              <th data-action="sort" data-sort-direction="asc" data-sort="firstName">First name</th>
-              <th data-action="sort" data-sort-direction="asc" data-sort="middleName">Middle name</th>
-              <th data-action="sort" data-sort-direction="asc" data-sort="lastName">Last name</th>
-              <th data-action="sort" data-sort-direction="asc" data-sort="nickname">Nickname</th>
-              <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
-              <th>Gender</th>
-              <th data-action="sort" data-sort-direction="asc" data-sort="prefect">Prefect</th>
-              <th data-action="sort" data-sort-direction="asc" data-sort="squad">Inq. squad</th>
-            </tr>
-          </thead>
+          <div class="sidebar">
+            <h3>Enrolled students 1991</h3>
+            <div class="counter">
+              <h4>Students</h4>
+              <p id="total-students"></p>
+              <p id="active-students"></p>
+              <p id="expelled-students"></p>
+            </div>
 
-          <tbody>
-            <!-- student template will be copied and inserted here -->
-          </tbody>
-        </table>
+            <div class="counter">
+              <h4>Houses</h4>
+              <p id="gryf-num"></p>
+              <p id="huf-num"></p>
+              <p id="rav-num"></p>
+              <p id="sly-num"></p>
+            </div>
+          </div>
+          <div class="mainbar">
+            <table id="list">
+              <thead>
+                <!-- "Headers" used for sorting students -->
+                <tr id="sorting">
+                  <th data-action="sort" data-sort-direction="asc" data-sort="firstName">First name</th>
+                  <th data-action="sort" data-sort-direction="asc" data-sort="middleName">Middle name</th>
+                  <th data-action="sort" data-sort-direction="asc" data-sort="lastName">Last name</th>
+                  <th data-action="sort" data-sort-direction="asc" data-sort="nickname">Nickname</th>
+                  <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
+                  <th>Gender</th>
+                  <th data-action="sort" data-sort-direction="asc" data-sort="prefect">Prefect</th>
+                  <th data-action="sort" data-sort-direction="asc" data-sort="squad">Inq. squad</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <!-- student template will be copied and inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <template id="student">
         <tr data-field="studentRow" class="student-info">
-            <td data-field="firstName"></td>
-            <td data-field="middleName"></td>
-            <td data-field="lastName"></td>
-            <td data-field="nickname"></td>
-            <td data-field="house"></td>
-            <td data-field="gender"></td>
-            <td data-field="prefect" data-prefect="false"></td>
-            <td data-field="squad" data-squad="false"></td>
+          <td data-field="firstName"></td>
+          <td data-field="middleName"></td>
+          <td data-field="lastName"></td>
+          <td data-field="nickname"></td>
+          <td data-field="house"></td>
+          <td data-field="gender"></td>
+          <td data-field="prefect" data-prefect="false"></td>
+          <td data-field="squad" data-squad="false"></td>
           <!--
           <td class="click" data-field="blood-status"></td>
           -->
@@ -82,12 +103,11 @@
         <div class="details">
           <div class="column left">
             <div>
-              <img src="" alt="" class="student-image">
+              <img src="" alt="" class="student-image" />
             </div>
             <div>
-              <img src="" alt="" class="house-crest">
+              <img src="" alt="" class="house-crest" />
             </div>
-
           </div>
           <div class="column right">
             <button class="closebutton">X</button>
@@ -99,14 +119,14 @@
             <p class="squad"></p>
             <p class="blood-status"></p>
             <p class="expelled"></p>
-          </div>
+            <button>Expel <span data-field="student"></span></button>
           </div>
         </div>
       </div>
 
       <!-- Warning modal: Ask user to remove 'other' or ignore -->
       <div id="remove_other_prefect" class="modal hidden">
-        <div class="dialogue">
+        <div class="warning">
           <button class="closebutton">X</button>
           <h1>Warning!</h1>
           <p>

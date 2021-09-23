@@ -19,7 +19,7 @@ THE 4 SPRINTS:
 - Warning modal (as in 11c.04.03) - Done!
 - Implement logic and user interface - Done!
 - Figuring out expelling...
-- Counters
+- Counters - Done!
 
 3RD SPRINT
 - Adding column for inquisitorial squad

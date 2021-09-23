@@ -284,6 +284,7 @@ function displayList(students) {
 
   // Build a new list
   students.forEach(displayStudent);
+  displayCounters(students);
 }
 
 function displayStudent(student) {
@@ -430,12 +431,42 @@ function clickStudent(event) {
   details.querySelector(".nickname").textContent = `Nickname: ${student.nickname}`;
   details.querySelector(".house").textContent = `House: ${student.house}`;
   details.querySelector(".prefect").textContent = `Prefect: ${student.prefect ? "Yes" : "No"}`;
-  // details.querySelector("squad").textContent = `Member of the inquisitorial squad: ${student.squad ? "Yes" : "No"}`;
-  // details.querySelector("expelled").textContent = ` Expelled: ${student.expelled ? "Yes" : "No"}`;
-  // details.querySelector("blood-status").textContent = ` `;
+  // details.querySelector(".squad").textContent = `Member of the inquisitorial squad: ${student.squad ? "Yes" : "No"}`;
+  // details.querySelector(".expelled").textContent = ` Expelled: ${student.expelled ? "Yes" : "No"}`;
+  // details.querySelector(".blood-status").textContent = ` `;
+
+  // Set house crest and colours
+  if (student.house === "Gryffindor") {
+    details.querySelector(".house-crest").src = `img/gryffindor_crest.png`;
+    details.querySelector(".details").style.borderColor = "#a50008";
+    details.querySelector(".details").style.backgroundColor = "#fdd33a";
+  } else if (student.house === "Hufflepuff") {
+    details.querySelector(".house-crest").src = `img/hufflepuff_crest.png`;
+    details.querySelector(".details").style.borderColor = "#282828";
+    details.querySelector(".details").style.backgroundColor = "#ffe070";
+  } else if (student.house === "Ravenclaw") {
+    details.querySelector(".house-crest").src = `img/ravenclaw_crest.png`;
+    details.querySelector(".details").style.borderColor = "#014c7e";
+    details.querySelector(".details").style.backgroundColor = "#dac2a9";
+  } else if (student.house === "Slytherin") {
+    details.querySelector(".house-crest").src = `img/slytherin_crest.png`;
+    details.querySelector(".details").style.borderColor = "#0a6824";
+    details.querySelector(".details").style.backgroundColor = "#eaecec";
+  }
 }
 
 function closeDetails() {
   document.querySelector("#details_modal").classList.add("hidden");
   document.querySelector("#details_modal .closebutton").removeEventListener("click", closeDetails);
+}
+
+function displayCounters(students) {
+  document.querySelector("#total-students").textContent = `Total students: ${students.length}`;
+  // document.querySelector("#active-students").textContent = `Active students: ${activeStudents.length}`;
+  // document.querySelector("#expelled-students").textContent = `Expelled students: ${expelledStudents.length}`;
+  // TO DO: UPDATE WHEN EXPELLING STARTS!
+  document.querySelector("#gryf-num").textContent = `Gryffindor: ${students.filter((student) => student.house === "Gryffindor").length}`;
+  document.querySelector("#huf-num").textContent = `Hufflepuff: ${students.filter((student) => student.house === "Hufflepuff").length}`;
+  document.querySelector("#rav-num").textContent = `Ravenclaw: ${students.filter((student) => student.house === "Ravenclaw").length}`;
+  document.querySelector("#sly-num").textContent = `Slytherin: ${students.filter((student) => student.house === "Slytherin").length}`;
 }

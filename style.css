@@ -1,3 +1,4 @@
+/* GENERAL */
 * {
   margin: 0 auto;
   padding: 0;
@@ -12,15 +13,7 @@ img {
 
 section {
   max-width: 1300px;
-}
-
-select,
-input {
-  background-color: rgb(249, 193, 135);
-  color: black;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0.5rem;
+  margin-top: 2rem;
 }
 
 /* HIDDEN CONTENT */
@@ -48,7 +41,27 @@ h2 {
 h3 {
   font-size: 1.5rem;
 }
+
 @media (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 3rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 1.5rem;
+  }
 }
 
 /* SPLASH */
@@ -63,6 +76,11 @@ h3 {
 #splash-img {
   grid-column: 1/6;
   grid-row: 1/4;
+}
+
+#splash-img img {
+  height: 100%;
+  object-fit: cover;
 }
 
 #splash-h1 {
@@ -108,6 +126,42 @@ h3 {
   #splash h2 {
     font-size: 4rem;
   }
+}
+
+/* GRID FOR LIST */
+select,
+input {
+  background-color: rgb(249, 193, 135);
+  color: black;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.topbar {
+  grid-area: topbar;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.mainbar {
+  grid-area: mainbar;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  grid-template-areas:
+    "sidebar topbar topbar topbar"
+    "sidebar mainbar mainbar mainbar";
+}
+
+.counter,
+.mainbar {
+  margin-top: 2rem;
 }
 
 /* LIST STYLING */
@@ -158,17 +212,24 @@ h3 {
 
 .details {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
   position: relative;
   align-self: center;
   justify-self: center;
   background-color: #fff;
   box-shadow: 1px 1px 10px #333;
   border-radius: 12px;
+  border: transparent 1.5rem solid;
   padding: 2rem;
 }
 
-.dialogue {
+.student-image,
+.house-crest {
+  max-width: 12vw;
+}
+
+.warning {
   position: relative;
   box-shadow: 1px 1px 10px #333;
   border-radius: 12px;
@@ -191,7 +252,7 @@ button.closebutton:hover {
   background-color: rgb(215, 215, 215);
 }
 
-.dialogue h1 {
+.warning h1 {
   margin-top: 0;
 }
 
