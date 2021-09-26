@@ -12,7 +12,8 @@ if (typeof window !== "undefined") {
 }
 
 const allStudents = [];
-let expelledStudents = [];
+const activeStudents = [];
+const expelledStudents = [];
 
 // Global default settings
 const settings = {
@@ -41,15 +42,17 @@ function registerSort() {
 async function loadJSON() {
   const response = await fetch("https://petlatkea.dk/2021/hogwarts/students.json");
   const jsonData = await response.json();
+  const responseBlood = await fetch("https://petlatkea.dk/2021/hogwarts/families.json");
+  const jsonDataBlood = await responseBlood.json();
 
   // When loaded, prepare data objects
-  prepareObjects(jsonData);
+  prepareObjects(jsonData, jsonDataBlood);
 
   // Filter initial data
   setFilter(document.querySelector("select").value);
 }
 
-function prepareObjects(jsonData) {
+function prepareObjects(jsonData, jsonDataBlood) {
   // Prototype for all students
   const Student = {
     imgUrl: "",
@@ -61,6 +64,8 @@ function prepareObjects(jsonData) {
     gender: "-unknown-",
     prefect: false,
     squad: false,
+    expelled: false,
+    blood: "-unknown-",
   };
 
   // Create new object with cleaned data and store it in the allStudents array
@@ -100,10 +105,10 @@ function prepareObjects(jsonData) {
   function getMiddleName(splitUp) {
     if (splitUp.length > 2) {
       const middleName = splitUp[1];
-      if (middleName.startsWith('"')) return "";
+      if (middleName.startsWith('"')) return "-";
       return middleName;
     }
-    return "";
+    return "-";
   }
 
   // If splitUp has more than 1 element, then the last element is the last name. If not, then return an empty string
@@ -112,7 +117,7 @@ function prepareObjects(jsonData) {
       const lastName = splitUp[splitUp.length - 1];
       return lastName;
     }
-    return "null";
+    return "-";
   }
 
   // If splitUp has more than 2 element, then the 2nd element is the nickname. If the nickname begins with " replace them globally with "", otherwise return an empty string (= no nickname)
@@ -123,10 +128,10 @@ function prepareObjects(jsonData) {
         return capitalize(nickname.replace(/"/g, ""));
       }
     }
-    return "";
+    return "-";
   }
 
-  // HELP! STUDENT.LASTNAME IS UNDEFINED!
+  // Get student image by looking at the student last and first name
   function getImgUrl(student) {
     const { firstName, lastName } = student;
     if (!lastName || !firstName) return undefined;
@@ -142,6 +147,17 @@ function prepareObjects(jsonData) {
       return student.lastName.substring(hyphenIndex + 1).toLowerCase() + `_${student.firstName.substring(0, 1).toLowerCase()}.png`;
     }
   }
+
+  // Set blood-status
+  allStudents.forEach((student) => {
+    if (jsonDataBlood.half.includes(student.lastName)) {
+      student.blood = "Half-blood";
+    } else if (jsonDataBlood.pure.includes(student.lastName)) {
+      student.blood = "Pure-blood";
+    } else {
+      student.blood = "Muggle-born";
+    }
+  });
 
   displayList(allStudents);
 }
@@ -166,7 +182,7 @@ function filterList(filteredList) {
   } else if (settings.filterBy === "squad") {
     filteredList = allStudents.filter(isSquad);
   } else if (settings.filterBy === "expelled") {
-    filteredList = allStudents.filter(isExpelled);
+    filteredList = expelledStudents.filter(isExpelled);
   } else if (settings.filterBy === "active") {
     filteredList = allStudents.filter(isActive);
   }
@@ -205,7 +221,6 @@ function isExpelled(student) {
 function isActive(student) {
   return student.active === true;
 }
-// TO DO: Filter functions for prefects, squad, expelled & active students
 
 // SEARCHING
 function searchStudent() {
@@ -308,15 +323,13 @@ function displayStudent(student) {
     clone.querySelector("[data-field=gender]").textContent = "-unknown-";
   }
 
-  // Prefect - add star to each student in the list according to their boolean value
-  clone.querySelector("[data-field=prefect]").textContent = `${student.prefect ? "⭐ " : "☆"}`;
-
+  // Clone the data-field "prefect" according to it's boolan value and add eventListener
+  clone.querySelector("[data-field=prefect]").dataset.prefect = student.prefect;
   clone.querySelector("[data-field=prefect]").addEventListener("click", clickPrefect);
 
-  // Inquisitorial squad - add emoji to each student in the list according to their boolean value
-  // clone.querySelector("[data-field=prefect]").textContent = `${student.prefect ? "💀" : "☆"}`;
-
-  // clone.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
+  // Inquisitorial squad
+  clone.querySelector("[data-field=squad]").dataset.squad = student.squad;
+  clone.querySelector("[data-field=squad]").addEventListener("click", clickSquad);
 
   // Eventlistener for Details Modal
   clone.querySelector("[data-field='studentRow']").id = student.id;
@@ -326,7 +339,8 @@ function displayStudent(student) {
   document.querySelector("#list tbody").appendChild(clone);
 
   // Turn prefect stars on and off
-  function clickPrefect() {
+  function clickPrefect(event) {
+    event.stopImmediatePropagation();
     // If student is already a prefect = remove prefect status
     if (student.prefect === true) {
       student.prefect = false;
@@ -337,17 +351,18 @@ function displayStudent(student) {
     buildList();
   }
 
-  // Turn inq.squad logo on and off
-  // function clickSquad() {
-  //   // If student is already a member of the inq.squad = remove squad status
-  //   if (student.squad === true) {
-  //     student.squad = false;
-  //   } else {
-  //     tryToMakeSquad(student);
-  //   }
-  //   console.log(`Squad = ${student.squad}`);
-  //   buildList();
-  // }
+  // Turn inq.squad skulls on and off
+  function clickSquad(event) {
+    event.stopImmediatePropagation();
+    // If student is already a member of the inq.squad = remove squad status
+    if (student.squad === true) {
+      student.squad = false;
+    } else {
+      tryToMakeSquad(student);
+    }
+    console.log(`Squad = ${student.squad}`);
+    buildList();
+  }
 }
 
 // Prefect logic
@@ -367,16 +382,16 @@ function tryToMakePrefect(selectedStudent) {
 
   function removeOther(other) {
     // Ask user to ignore or remove 'other'
-    document.querySelector("#remove_other_prefect").classList.remove("hidden");
+    document.querySelector("#remove_other_prefect").classList.remove("hide");
     document.querySelector("#remove_other_prefect .closebutton").addEventListener("click", closeDialogue);
     document.querySelector("#remove_other_prefect .removebutton").addEventListener("click", clickRemoveButton);
     document.querySelector("#remove_other_prefect [data-field=other-prefect]").textContent = `${other.firstName} ${other.lastName}`;
     document.querySelector(".removebutton [data-field=other-prefect]").textContent = other.firstName;
 
     // If ignore - Do nothing:
-    // Clicking closebutton hides modal/dialogue box
+    // Clicking closebutton hides modal/warning box
     function closeDialogue() {
-      document.querySelector("#remove_other_prefect").classList.add("hidden");
+      document.querySelector("#remove_other_prefect").classList.add("hide");
 
       document.querySelector("#remove_other_prefect .closebutton").removeEventListener("click", closeDialogue);
       document.querySelector("#remove_other_prefect .removebutton").removeEventListener("click", clickRemoveButton);
@@ -400,73 +415,132 @@ function tryToMakePrefect(selectedStudent) {
   }
 }
 
-// Inquisitorial squad logic - IN PROGRESS
-// function tryToMakeSquad(selectedStudent) {
-//   if (selectedStudent.house === "Slytherin") {
-//     makeSquad(selectedStudent);
-//   } else if (selectedStudent.blood - status === pure - blood) {
-//     makeSquad(selectedStudent);
-//   } else {
-//     selectedStudent.squad = false;
-//     notSquadMaterial();
-//   }
+// Inquisitorial squad logic
+function tryToMakeSquad(selectedStudent) {
+  if (selectedStudent.house === "Slytherin") {
+    makeSquad(selectedStudent);
+  } else {
+    selectedStudent.squad = false;
+    notSquadMaterial();
+  }
 
-//   function makeSquad(selectedStudent) {
-//     selectedStudent.squad = true;
-//   }
+  function makeSquad(selectedStudent) {
+    selectedStudent.squad = true;
+  }
 
-//   function notSquadMaterial() {}
-// }
-
-function clickStudent(event) {
-  const student = allStudents.find((student) => student.id === event.currentTarget.id);
-  let details = document.querySelector("#details_modal");
-  details.classList.remove("hidden");
-  document.querySelector("[data-field='studentRow']").removeEventListener("click", clickStudent);
-  document.querySelector("#details_modal .closebutton").addEventListener("click", closeDetails);
-
-  // Add data to the details modal
-  details.querySelector(".student-image").src = `images/${student.image}`;
-  details.querySelector(".full-name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
-  details.querySelector(".nickname").textContent = `Nickname: ${student.nickname}`;
-  details.querySelector(".house").textContent = `House: ${student.house}`;
-  details.querySelector(".prefect").textContent = `Prefect: ${student.prefect ? "Yes" : "No"}`;
-  // details.querySelector(".squad").textContent = `Member of the inquisitorial squad: ${student.squad ? "Yes" : "No"}`;
-  // details.querySelector(".expelled").textContent = ` Expelled: ${student.expelled ? "Yes" : "No"}`;
-  // details.querySelector(".blood-status").textContent = ` `;
-
-  // Set house crest and colours
-  if (student.house === "Gryffindor") {
-    details.querySelector(".house-crest").src = `img/gryffindor_crest.png`;
-    details.querySelector(".details").style.borderColor = "#a50008";
-    details.querySelector(".details").style.backgroundColor = "#fdd33a";
-  } else if (student.house === "Hufflepuff") {
-    details.querySelector(".house-crest").src = `img/hufflepuff_crest.png`;
-    details.querySelector(".details").style.borderColor = "#282828";
-    details.querySelector(".details").style.backgroundColor = "#ffe070";
-  } else if (student.house === "Ravenclaw") {
-    details.querySelector(".house-crest").src = `img/ravenclaw_crest.png`;
-    details.querySelector(".details").style.borderColor = "#014c7e";
-    details.querySelector(".details").style.backgroundColor = "#dac2a9";
-  } else if (student.house === "Slytherin") {
-    details.querySelector(".house-crest").src = `img/slytherin_crest.png`;
-    details.querySelector(".details").style.borderColor = "#0a6824";
-    details.querySelector(".details").style.backgroundColor = "#eaecec";
+  function notSquadMaterial() {
+    // Inform user that this student is not squad material
+    document.querySelector("#not_squad_material").classList.remove("hide");
+    document.querySelector("#not_squad_material .closebutton").addEventListener("click", closeSquadWarning);
+    document.querySelector("#not_squad_material .okbutton").addEventListener("click", closeSquadWarning);
   }
 }
 
-function closeDetails() {
-  document.querySelector("#details_modal").classList.add("hidden");
-  document.querySelector("#details_modal .closebutton").removeEventListener("click", closeDetails);
+// Clicking closebutton or okbutton hides modal/warning box
+function closeSquadWarning() {
+  document.querySelector("#not_squad_material").classList.add("hide");
 }
 
-function displayCounters(students) {
-  document.querySelector("#total-students").textContent = `Total students: ${students.length}`;
-  // document.querySelector("#active-students").textContent = `Active students: ${activeStudents.length}`;
-  // document.querySelector("#expelled-students").textContent = `Expelled students: ${expelledStudents.length}`;
-  // TO DO: UPDATE WHEN EXPELLING STARTS!
-  document.querySelector("#gryf-num").textContent = `Gryffindor: ${students.filter((student) => student.house === "Gryffindor").length}`;
-  document.querySelector("#huf-num").textContent = `Hufflepuff: ${students.filter((student) => student.house === "Hufflepuff").length}`;
-  document.querySelector("#rav-num").textContent = `Ravenclaw: ${students.filter((student) => student.house === "Ravenclaw").length}`;
-  document.querySelector("#sly-num").textContent = `Slytherin: ${students.filter((student) => student.house === "Slytherin").length}`;
+function clickStudent(event) {
+  let studentID = event.currentTarget.id;
+  openStudentDetails(studentID);
+}
+
+function openStudentDetails(studentID) {
+  const student = allStudents.find((student) => student.id === studentID);
+
+  // Create details-clone
+  const cloneDetails = document.querySelector("template#details_modal").content.cloneNode(true);
+  const studentDetails = document.querySelector("#student-details");
+  studentDetails.classList.remove("hide");
+  studentDetails.textContent = "";
+
+  // Add data to the details modal
+  cloneDetails.querySelector(".student-image").src = `images/${student.image}`;
+  cloneDetails.querySelector(".closebutton").textContent = "X";
+  cloneDetails.querySelector(".closebutton").addEventListener("click", closeStudentDetails);
+  if (student.middleName === "-") {
+    cloneDetails.querySelector(".full-name").textContent = `${student.firstName} ${student.lastName}`;
+  } else {
+    cloneDetails.querySelector(".full-name").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`;
+  }
+  cloneDetails.querySelector(".nickname").textContent = `Nickname: ${student.nickname}`;
+  cloneDetails.querySelector(".house").textContent = `House: ${student.house}`;
+  cloneDetails.querySelector(".prefect").textContent = `Prefect: ${student.prefect ? "Yes" : "No"}`;
+  cloneDetails.querySelector(".squad").textContent = `Member of the inquisitorial squad: ${student.squad ? "Yes" : "No"}`;
+  cloneDetails.querySelector(".blood").textContent = `Blood-status: ${student.blood}`;
+  cloneDetails.querySelector(".expelled").textContent = `Expelled: ${student.expelled ? "Yes" : "No"}`;
+  cloneDetails.querySelector("#expelbutton").textContent = `Expel ${student.firstName}`;
+  cloneDetails.querySelector("#expelbutton").addEventListener("click", expelStudent);
+
+  // Set house crest and colours
+  if (student.house === "Gryffindor") {
+    cloneDetails.querySelector(".house-crest").src = `img/gryffindor_crest.png`;
+    cloneDetails.querySelector(".details").style.borderColor = "#a50008";
+    cloneDetails.querySelector(".details").style.backgroundColor = "#fdd33a";
+  } else if (student.house === "Hufflepuff") {
+    cloneDetails.querySelector(".house-crest").src = `img/hufflepuff_crest.png`;
+    cloneDetails.querySelector(".details").style.borderColor = "#282828";
+    cloneDetails.querySelector(".details").style.backgroundColor = "#ffe070";
+  } else if (student.house === "Ravenclaw") {
+    cloneDetails.querySelector(".house-crest").src = `img/ravenclaw_crest.png`;
+    cloneDetails.querySelector(".details").style.borderColor = "#014c7e";
+    cloneDetails.querySelector(".details").style.backgroundColor = "#dac2a9";
+  } else if (student.house === "Slytherin") {
+    cloneDetails.querySelector(".house-crest").src = `img/slytherin_crest.png`;
+    cloneDetails.querySelector(".details").style.borderColor = "#0a6824";
+    cloneDetails.querySelector(".details").style.backgroundColor = "#eaecec";
+  }
+
+  // Append clone to list
+  studentDetails.appendChild(cloneDetails);
+
+  // Remove student from the allStudents-array and add to the expelledStudents-array
+  function expelStudent() {
+    // Remove eventlistener so that each student can only be expelled once
+    let expelButton = document.querySelector("#expelbutton");
+    expelButton.removeEventListener("click", expelStudent);
+    expelButton.style.backgroundColor = "#000";
+    expelButton.style.color = "#f6eac9";
+    expelButton.textContent = "EXPELLED";
+    studentDetails.addEventListener("animationend", hideDetails);
+    studentDetails.classList.add("fade");
+
+    student.expelled = true;
+    studentDetails.querySelector(".expelled").textContent = `Expelled: ${student.expelled ? "Yes" : "No"}`;
+
+    expelledStudents.push(
+      allStudents.splice(
+        allStudents.findIndex((elm) => elm.id === studentID),
+        1
+      )[0]
+    );
+    displayList(allStudents);
+  }
+
+  function hideDetails() {
+    studentDetails.classList.remove("fade");
+    studentDetails.removeEventListener("animationend", hideDetails);
+    studentDetails.classList.add("hide");
+  }
+}
+
+function closeStudentDetails() {
+  document.querySelector("#student-details").classList.add("hide");
+}
+
+function displayCounters() {
+  // Counters for number of student (total, active and expelled)
+  document.querySelector("#total-students").textContent = `Total students: ${allStudents.length + expelledStudents.length}`;
+  document.querySelector("#active-students").textContent = `Active students: ${allStudents.length}`;
+  document.querySelector("#expelled-students").textContent = `Expelled students: ${expelledStudents.length}`;
+  // Counters for number of students in each house
+  document.querySelector("#gryf-num").textContent = `Gryffindor: ${allStudents.filter((student) => student.house === "Gryffindor").length}`;
+  document.querySelector("#huf-num").textContent = `Hufflepuff: ${allStudents.filter((student) => student.house === "Hufflepuff").length}`;
+  document.querySelector("#rav-num").textContent = `Ravenclaw: ${allStudents.filter((student) => student.house === "Ravenclaw").length}`;
+  document.querySelector("#sly-num").textContent = `Slytherin: ${allStudents.filter((student) => student.house === "Slytherin").length}`;
+}
+
+function hackTheSystem() {
+  console.log("I solemnly swear that I am up to no good...");
 }

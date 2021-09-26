@@ -27,14 +27,13 @@
             <nav>
               <!-- Choose filter -->
               <select name="select-filter" id="select-filter">
-                <option value="all-students">All students</option>
+                <option value="all-students">All active students</option>
                 <option value="gryffindor">Students of Gryffindor</option>
                 <option value="hufflepuff">Students of Hufflepuff</option>
                 <option value="ravenclaw">Students of Ravenclaw</option>
                 <option value="slytherin">Students of Slytherin</option>
                 <option value="prefect">Prefects</option>
                 <option value="expelled">Expelled students</option>
-                <option value="active">Active students</option>
               </select>
               <!-- Search field -->
               <input id="search" type="search" placeholder="Search for student" />
@@ -42,7 +41,7 @@
           </div>
 
           <div class="sidebar">
-            <h3>Enrolled students 1991</h3>
+            <h3>Students 1991</h3>
             <div class="counter">
               <h4>Students</h4>
               <p id="total-students"></p>
@@ -92,16 +91,13 @@
           <td data-field="gender"></td>
           <td data-field="prefect" data-prefect="false"></td>
           <td data-field="squad" data-squad="false"></td>
-          <!--
-          <td class="click" data-field="blood-status"></td>
-          -->
         </tr>
       </template>
 
-      <!-- Details modal -->
-      <div id="details_modal" class="modal hidden">
+      <!-- Template for details modal -->
+      <template id="details_modal">
         <div class="details">
-          <div class="column left">
+          <div class="column">
             <div>
               <img src="" alt="" class="student-image" />
             </div>
@@ -110,22 +106,24 @@
             </div>
           </div>
           <div class="column right">
-            <button class="closebutton">X</button>
-            <div class="student-details"></div>
+            <button class="closebutton"></button>
             <h1 class="full-name"></h1>
             <p class="nickname"></p>
             <p class="house"></p>
             <p class="prefect"></p>
             <p class="squad"></p>
-            <p class="blood-status"></p>
+            <p class="blood"></p>
             <p class="expelled"></p>
-            <button>Expel <span data-field="student"></span></button>
+            <button id="expelbutton"></button>
           </div>
         </div>
-      </div>
+      </template>
+
+      <!-- Details modal inserted here -->
+      <div id="student-details" class="modal hide"></div>
 
       <!-- Warning modal: Ask user to remove 'other' or ignore -->
-      <div id="remove_other_prefect" class="modal hidden">
+      <div id="remove_other_prefect" class="modal hide">
         <div class="warning">
           <button class="closebutton">X</button>
           <h1>Warning!</h1>
@@ -138,7 +136,25 @@
           </div>
         </div>
       </div>
+
+      <!-- Warning modal: Selected student is not squad material -->
+      <div id="not_squad_material" class="modal hide">
+        <div class="warning">
+          <button class="closebutton">X</button>
+          <h1>Warning!</h1>
+          <p>
+            The student must be in house Slytherin to join the inquisitorial squad. <br />
+            Please add another student who meets these requirements!
+          </p>
+          <div>
+            <button class="okbutton">I understand</button>
+          </div>
+        </div>
+      </div>
     </main>
+    <footer>
+      <p>Hogwarts School of Witchcraft and Wizardry 2021</p>
+    </footer>
 
     <script src="script.js"></script>
   </body>
