@@ -64,8 +64,8 @@ function prepareObjects(jsonData, jsonDataBlood) {
     gender: "-unknown-",
     prefect: false,
     squad: false,
-    expelled: false,
     blood: "-unknown-",
+    expelled: false,
   };
 
   // Create new object with cleaned data and store it in the allStudents array
